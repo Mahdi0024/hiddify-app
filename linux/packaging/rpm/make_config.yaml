@@ -1,50 +1,52 @@
 
 
-# <<<   RPM NOT SUPPORTED   >>>
-# We decided to remove RPM packaging for the following reasons:
-# - Flutter officially supports Debian-based systems only.
-# - Persistent issues with dependency linking.
-# - High maintenance overhead (requires Fedora environment setup).
-# - Successful builds do not guarantee runtime stability on Red Hat-based systems.
+display_name: Hiddify
+url: https://github.com/hiddify/hiddify-app
+license: Other
 
+packager: hiddify
+packagerEmail: linux@hiddify.com
 
-# display_name: Hiddify
-# url: https://github.com/hiddify/hiddify-app
-# license: Other
+icon: assets/images/source/ic_launcher_border.png
 
-# packager: hiddify
-# packagerEmail: linux@hiddify.com
+keywords:
+  - Hiddify
+  - Proxy
+  - VPN
+  - V2ray
+  - Nekoray
+  - Xray
+  - Psiphon
+  - OpenVPN
 
-# icon: assets/images/source/ic_launcher_border.png
+generic_name: Hiddify
 
-# keywords:
-#   - Hiddify
-#   - Proxy
-#   - VPN
-#   - V2ray
-#   - Nekoray
-#   - Xray
-#   - Psiphon
-#   - OpenVPN
+requires:
+  - libayatana-appindicator-gtk3
+  - libcap
+  - patchelf
 
-# generic_name: Hiddify
+SPEC:
+  preamble:
+    __requires_exclude: ^libcurl\.so\.4\(CURL_OPENSSL_4\)\(64bit\)$
+  body:
+    "%post": |
+      patchelf --set-rpath /usr/share/hiddify/lib /usr/share/hiddify/hiddify >/dev/null 2>&1 || :
+      patchelf --set-rpath /usr/share/hiddify/lib /usr/share/hiddify/HiddifyCli >/dev/null 2>&1 || :
+      setcap cap_net_admin=+ep /usr/share/hiddify/hiddify >/dev/null 2>&1 || :
+      setcap cap_net_admin=+ep /usr/share/hiddify/HiddifyCli >/dev/null 2>&1 || :
 
-# requires:
-#   - libayatana-appindicator-gtk3
-#   # - libcurl
-#   # - openssl
+categories:
+  - Network
 
-# categories:
-#   - Network
-
-# startup_notify: true
-# # app_links setup for Linux
-# # https://github.com/llfbandit/app_links/blob/master/doc/README_linux.md
-# supported_mime_type:
-#   - x-scheme-handler/hiddify
-#   - x-scheme-handler/v2ray
-#   - x-scheme-handler/v2rayn
-#   - x-scheme-handler/v2rayng
-#   - x-scheme-handler/clash
-#   - x-scheme-handler/clashmeta
-#   - x-scheme-handler/sing-box
+startup_notify: true
+# app_links setup for Linux
+# https://github.com/llfbandit/app_links/blob/master/doc/README_linux.md
+supported_mime_type:
+  - x-scheme-handler/hiddify
+  - x-scheme-handler/v2ray
+  - x-scheme-handler/v2rayn
+  - x-scheme-handler/v2rayng
+  - x-scheme-handler/clash
+  - x-scheme-handler/clashmeta
+  - x-scheme-handler/sing-box

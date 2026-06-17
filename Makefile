@@ -324,7 +324,7 @@ windows-msix-release:
 	  --build-target=$(TARGET) \
 	  --build-dart-define=sentry_dsn=$(SENTRY_DSN)
 
-linux-release: linux-deb-release linux-appimage-release
+linux-release: linux-deb-release linux-appimage-release linux-rpm-release
 
 linux-amd64-release: linux-release
 linux-arm64-release: linux-release
@@ -336,6 +336,14 @@ linux-deb-release:
 	fastforge package \
 	--platform linux \
 	--targets deb \
+	--skip-clean \
+	--build-target=$(TARGET) \
+	--build-dart-define=sentry_dsn=$(SENTRY_DSN)
+
+linux-rpm-release:
+	fastforge package \
+	--platform linux \
+	--targets rpm \
 	--skip-clean \
 	--build-target=$(TARGET) \
 	--build-dart-define=sentry_dsn=$(SENTRY_DSN)

@@ -341,63 +341,63 @@ linux-deb-release:
 	--build-dart-define=sentry_dsn=$(SENTRY_DSN)
 
 linux-rpm-release:
-	fastforge package \\
-	--platform linux \\
-	--targets rpm \\
-	--skip-clean \\
-	--build-target=$(TARGET) \\
+	fastforge package \
+	--platform linux \
+	--targets rpm \
+	--skip-clean \
+	--build-target=$(TARGET) \
 	--build-dart-define=sentry_dsn=$(SENTRY_DSN)
-	@$(YELLOW)Post-processing RPM$(DONE); \\
-	APP_VER=$$(grep "version:" pubspec.yaml | head -n 1 | awk '{print $$2}' | cut -d+ -f1); \\
-	APP_REL=$$(grep "version:" pubspec.yaml | head -n 1 | awk '{print $$2}' | cut -d+ -f2); \\
-	rm -rf /tmp/rpm-repack; \\
-	mkdir -p /tmp/rpm-repack/BUILD /tmp/rpm-repack/BUILDROOT /tmp/rpm-repack/RPMS /tmp/rpm-repack/SOURCES /tmp/rpm-repack/SPECS /tmp/rpm-repack/payload; \\
-	rpm2cpio dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm | cpio -idm -D /tmp/rpm-repack/payload; \\
-	patchelf --set-rpath /usr/share/hiddify/lib /tmp/rpm-repack/payload/usr/share/hiddify/hiddify; \\
-	patchelf --set-rpath /usr/share/hiddify/lib /tmp/rpm-repack/payload/usr/share/hiddify/HiddifyCli; \\
-	printf '%s\n' \\
-	  '%define _build_id_links none' \\
-	  'Name: hiddify' \\
-	  "Version: $$APP_VER" \\
-	  "Release: $$APP_REL" \\
-	  'Summary: Cross Platform Multi Protocol Proxy Frontend.' \\
-	  'License: Other' \\
-	  'URL: https://github.com/hiddify/hiddify-app' \\
-	  'Packager: hiddify <linux@hiddify.com>' \\
-	  'BuildArch: x86_64' \\
-	  'AutoReqProv: no' \\
-	  'Requires: libayatana-appindicator-gtk3, libcap' \\
-	  '' \\
-	  '%description' \\
-	  'Cross Platform Multi Protocol Proxy Frontend.' \\
-	  '' \\
-	  '%install' \\
-	  'rm -rf %{buildroot}' \\
-	  'mkdir -p %{buildroot}' \\
-	  'cp -a /tmp/rpm-repack/payload/. %{buildroot}/' \\
-	  'echo "%{_bindir}/%{name}" > %{_builddir}/files.list' \\
-	  'echo "%{_datadir}/%{name}" >> %{_builddir}/files.list' \\
-	  'echo "%{_datadir}/applications/%{name}.desktop" >> %{_builddir}/files.list' \\
-	  'echo "%{_datadir}/metainfo" >> %{_builddir}/files.list' \\
-	  'if [ -d %{buildroot}%{_prefix}/lib/.build-id ]; then' \\
-	  '  echo "%{_prefix}/lib/.build-id" >> %{_builddir}/files.list' \\
-	  'fi' \\
-	  '' \\
-	  '%post' \\
-	  'setcap cap_net_admin=+ep /usr/share/hiddify/hiddify >/dev/null 2>&1 || :' \\
-	  'setcap cap_net_admin=+ep /usr/share/hiddify/HiddifyCli >/dev/null 2>&1 || :' \\
-	  '' \\
-	  '%postun' \\
-	  'update-mime-database %{_datadir}/mime &> /dev/null || :' \\
-	  '' \\
-	  '%files -f %{_builddir}/files.list' \\
-	  '%defattr(-,root,root)' \\
-	  '%attr(4755, root, root) %{_datadir}/pixmaps/%{name}.png' \\
-	  > /tmp/rpm-repack/SPECS/hiddify.spec; \\
-	rm -f dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm; \\
-	QA_RPATHS=0x0002 rpmbuild --define "_topdir /tmp/rpm-repack" -bb /tmp/rpm-repack/SPECS/hiddify.spec; \\
-	cp /tmp/rpm-repack/RPMS/x86_64/hiddify-*.rpm dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm; \\
-	rm -rf /tmp/rpm-repack; \\
+	@$(YELLOW)Post-processing RPM$(DONE); \
+	APP_VER=$$(grep "version:" pubspec.yaml | head -n 1 | awk '{print $$2}' | cut -d+ -f1); \
+	APP_REL=$$(grep "version:" pubspec.yaml | head -n 1 | awk '{print $$2}' | cut -d+ -f2); \
+	rm -rf /tmp/rpm-repack; \
+	mkdir -p /tmp/rpm-repack/BUILD /tmp/rpm-repack/BUILDROOT /tmp/rpm-repack/RPMS /tmp/rpm-repack/SOURCES /tmp/rpm-repack/SPECS /tmp/rpm-repack/payload; \
+	rpm2cpio dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm | cpio -idm -D /tmp/rpm-repack/payload; \
+	patchelf --set-rpath /usr/share/hiddify/lib /tmp/rpm-repack/payload/usr/share/hiddify/hiddify; \
+	patchelf --set-rpath /usr/share/hiddify/lib /tmp/rpm-repack/payload/usr/share/hiddify/HiddifyCli; \
+	printf '%s\n' \
+	  '%define _build_id_links none' \
+	  'Name: hiddify' \
+	  "Version: $$APP_VER" \
+	  "Release: $$APP_REL" \
+	  'Summary: Cross Platform Multi Protocol Proxy Frontend.' \
+	  'License: Other' \
+	  'URL: https://github.com/hiddify/hiddify-app' \
+	  'Packager: hiddify <linux@hiddify.com>' \
+	  'BuildArch: x86_64' \
+	  'AutoReqProv: no' \
+	  'Requires: libayatana-appindicator-gtk3, libcap' \
+	  '' \
+	  '%description' \
+	  'Cross Platform Multi Protocol Proxy Frontend.' \
+	  '' \
+	  '%install' \
+	  'rm -rf %{buildroot}' \
+	  'mkdir -p %{buildroot}' \
+	  'cp -a /tmp/rpm-repack/payload/. %{buildroot}/' \
+	  'echo "%{_bindir}/%{name}" > %{_builddir}/files.list' \
+	  'echo "%{_datadir}/%{name}" >> %{_builddir}/files.list' \
+	  'echo "%{_datadir}/applications/%{name}.desktop" >> %{_builddir}/files.list' \
+	  'echo "%{_datadir}/metainfo" >> %{_builddir}/files.list' \
+	  'if [ -d %{buildroot}%{_prefix}/lib/.build-id ]; then' \
+	  '  echo "%{_prefix}/lib/.build-id" >> %{_builddir}/files.list' \
+	  'fi' \
+	  '' \
+	  '%post' \
+	  'setcap cap_net_admin=+ep /usr/share/hiddify/hiddify >/dev/null 2>&1 || :' \
+	  'setcap cap_net_admin=+ep /usr/share/hiddify/HiddifyCli >/dev/null 2>&1 || :' \
+	  '' \
+	  '%postun' \
+	  'update-mime-database %{_datadir}/mime &> /dev/null || :' \
+	  '' \
+	  '%files -f %{_builddir}/files.list' \
+	  '%defattr(-,root,root)' \
+	  '%attr(4755, root, root) %{_datadir}/pixmaps/%{name}.png' \
+	  > /tmp/rpm-repack/SPECS/hiddify.spec; \
+	rm -f dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm; \
+	QA_RPATHS=0x0002 rpmbuild --define "_topdir /tmp/rpm-repack" -bb /tmp/rpm-repack/SPECS/hiddify.spec; \
+	cp /tmp/rpm-repack/RPMS/x86_64/hiddify-*.rpm dist/$$APP_VER+$$APP_REL/hiddify-$$APP_VER+$$APP_REL-linux.rpm; \
+	rm -rf /tmp/rpm-repack; \
 	$(GREEN)Successful$(DONE)
 
 
